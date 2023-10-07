@@ -8,5 +8,6 @@ namespace Multi_Tenant_Web.Models
         {
         }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Tenant> Tenants { get; set; }
     }
 }
