@@ -11,6 +11,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddScoped<ICurrentTenantService, CurrentTenantService>();
 
 var app = builder.Build();
 
