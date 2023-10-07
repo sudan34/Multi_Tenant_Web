@@ -20,6 +20,7 @@ namespace Multi_Tenant_Web.Services
         {
             var product = new Product();
             product.Name = request.Name;
+            product.Description = request.Description;
 
             _context.Products.Add(product);
             _context.SaveChanges();

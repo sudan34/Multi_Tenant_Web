@@ -7,15 +7,20 @@ namespace Multi_Tenant_Web.Models
     public class ApplicationDbContext : DbContext
     {
         private readonly ICurrentTenantService _tenantService;
-        public string CurrentTenentId { get; set; }
-        public ApplicationDbContext(DbContextOptions options, ICurrentTenantService currentTenantService) : base(options)
+        public string CurrentTenantId { get; set; }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentTenantService currentTenantService) : base(options)
         {
             _tenantService = currentTenantService;
-            CurrentTenentId = _tenantService.TenantId;
+            CurrentTenantId = _tenantService.TenantId;
         }
         public DbSet<Product> Products { get; set; }
         public DbSet<Tenant> Tenants { get; set; }
 
+        // on app startup
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Product>().HasQueryFilter(a=>a.TenantId == CurrentTenantId);
+        }
         //everytime we save something
         public override int SaveChanges()
         {
@@ -25,7 +30,7 @@ namespace Multi_Tenant_Web.Models
                 {
                     case EntityState.Added:
                         case EntityState.Modified:
-                        entry.Entity.TenentId = CurrentTenentId;
+                        entry.Entity.TenantId = CurrentTenantId;
                         break;
                 }
             }
